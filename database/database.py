@@ -23,6 +23,10 @@ class DB:
         self.connection = engine.connect()
         return self
 
-    def query(self, query_string):
+    def select(self, query_string):
+        return self.connection.execute(text(query_string))
+
+    def insert(self, query_string):
         self.connection.execute(text(query_string))
         return self.connection.commit()
+

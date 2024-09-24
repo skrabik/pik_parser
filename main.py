@@ -9,8 +9,8 @@ from time import time
 db = DB().connect()
 api = pikAPI()
 
-query = db.query("SELECT * FROM flat")
-parsed_flats = {flat[1] for flat in query} if query else set()
+query = db.select("SELECT pik_id FROM flat")
+parsed_flats = {flat[0] for flat in query}
 
 
 with open('search_params.json', 'r') as f:
@@ -22,8 +22,8 @@ flats = api.get_flats(params=search_params)
 for el in flats:
     if el['id'] not in parsed_flats:
         parsed_flats.add(el['id'])
-        db.query("INSERT INTO flat (pik_id) VALUES ('{}')".format(el['id']))
+        db.insert("INSERT INTO flat (pik_id) VALUES ('{}')".format(el['id']))
         StaticMethods.sendText(BOT_TOKEN, '1030879612', create_message(el))
-print(f"Сбор данных завершен за {start_time - time()} секунд")
+print(f"Сбор данных завершен за {int(time() - start_time)} секунд")
 
 
